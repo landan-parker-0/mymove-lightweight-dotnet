@@ -1,0 +1,9 @@
+﻿@page "/error/{Value}"
+
+<h3>ErrorPage</h3>
+<div>@Value</div>
+
+@code{
+    [Parameter]
+    public string? Value { get; set; }
+}
