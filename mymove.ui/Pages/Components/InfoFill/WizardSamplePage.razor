@@ -1,0 +1,59 @@
+﻿@page "/wizardsample"
+@using mymove.ui.Pages.Components.InfoFill
+
+<h3>WizardSamplePage</h3>
+
+<Wizard WizardComponentParameters="@(WizardComponentParameters)"/>
+
+@code
+{
+    public static WizardElement[] CreateWizardComponentFromModel(WizardSamplePage page)
+    {
+        var item = new 
+        {
+            DTO_A = new 
+            { 
+                Trip = 43,
+                Hello = "World" 
+            },
+            DTO_B = new 
+            { 
+                Hows = "This",
+                And = 234
+            },
+        };
+
+        page.TotalWizardModel = item;
+
+        return new WizardElement[] {
+            new (new IWizardItemBase[]
+            {
+                item.DTO_A.AsWizardItemBase(model =>
+                    @<div>
+                        <div>First @(model?.Trip)</div>
+                        <div>Second @(model?.Hello)</div>
+                    </div>),
+                    
+                item.DTO_B.AsWizardItemBase(model =>
+                    @<div>
+                        <div>@(model?.Hows)</div>
+                        <div>@(model?.And)</div>
+                    </div>),
+            }),
+            new (new IWizardItemBase[]
+            {
+                new WizardItemBase<int>(model => @<div>2) Item A (@model)</div>){ ModelSource = new (4) },
+                new WizardItemBase<int>(model => @<div>2) Item B (@model)</div>){ ModelSource = new (44) },
+            })
+        };
+    }
+
+    public WizardComponentParameters WizardComponentParameters { get; set; }
+    public object TotalWizardModel { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        WizardComponentParameters = new (CreateWizardComponentFromModel(this));
+        await Task.CompletedTask;
+    }
+}

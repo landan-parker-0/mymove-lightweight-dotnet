@@ -1,0 +1,20 @@
+﻿<h3>Wizard</h3>
+<button onclick="@((Action<MouseEventArgs>)(e => WizardComponentItems.PreviousWizard()))">Prev</button>
+<button onclick="@((Action<MouseEventArgs>)(e => WizardComponentItems.NextWizard()))">Next</button>
+
+@WizardComponentItems?.GetCurrentWizardElement().Render
+
+@code {
+    [Parameter]
+    public WizardComponentParameters WizardComponentParameters { get; set; } = default!;
+
+    public WizardComponentItems WizardComponentItems { get; set; } = default!;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        (WizardComponentItems = new (WizardComponentParameters.Elements))
+            .SetWizardIndex(WizardComponentParameters.InitialStartingIndex);
+
+        await base.OnParametersSetAsync();
+    }
+}
